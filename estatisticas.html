@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title id="page">iSenhas WEB</title>
+  <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+  <meta name="description" content="">
+  <meta name="author" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <link href="favicon.ico" rel="shortcut icon">
+  <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.css" rel="stylesheet">
+  <link rel="stylesheet" href="c3charts/c3.css">
+  <link rel="stylesheet" href="vendor/bootstrap-select/css/bootstrap-select.css">
+  <link rel="stylesheet" href="css/estatisticas.css" rel="stylesheet">
+  <link rel="stylesheet" href="css/sidebar.css" rel="stylesheet">
+  <link rel="stylesheet" href="vendor/fontawesome/css/fontawesome-all.css">
+  <link href="vendor/fontawesome/css/font-awesome.min.css" rel="stylesheet">
+  <link href="fonts/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css">
+</head>
+<div class="nav-left-sidebar sidebar-primary">
+  <div class="menu-list">
+    <nav class="navbar navbar-expand-lg navbar-light">
+      <a class="d-xl-none d-lg-none" href="#">Usuários</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav flex-column">
+          <li class="nav-divider">
+            Menu
+          </li>
+          <li class="nav-item ">
+            <a class="nav-link " href="#" data-toggle="collapse" aria-expanded="false" data-target="#submenu-1"
+              aria-controls="submenu-1" onclick="senhas()" id="passwordsmenu"><i class="fas fa-key"></i>Senhas</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-toggle="collapse" aria-expanded="false" data-target="#submenu-1"
+              aria-controls="submenu-1" onclick="doc()" id="docsmenu"><i class="fa fa-id-card"></i>Documentos</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-toggle="collapse" aria-expanded="false"
+                data-target="#submenu-1" aria-controls="submenu-1" onclick="pix()" id="pixmenu"><i
+                    class="fas fa-key" ></i>Chaves Pix</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-toggle="collapse" aria-expanded="false" data-target="#submenu-2"
+              aria-controls="submenu-2" onclick="notas()" id="notesmenu"><i class="fas fa-sticky-note"></i>Notas</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-toggle="collapse" aria-expanded="false" data-target="#submenu-2"
+              aria-controls="submenu-2" onclick="alertas()" id="alertsmenu"><i
+                class="fas fa-exclamation-triangle"></i>Alertas</a>
+          </li>
+          <li class="nav-item" id="usersmenu" style="display: none;">
+            <a class="nav-link " id="usersmenu2" href="#" data-toggle="collapse" aria-expanded="false"
+              data-target="#submenu-6" aria-controls="submenu-6" onclick="users()" id="logoutmenu"><i
+                class="fas fa-users"></i>Usuários</a>
+          </li>
+          <li class="nav-item" id="estatisticasmenu" style="display: block;">
+            <a class="nav-link active" id="estatisticasmenu2" href="#" data-toggle="collapse" aria-expanded="false"
+              data-target="#submenu-6" aria-controls="submenu-6" onclick="estatisticas()" id="logoutmenu"><i
+                class="fas fa-chart-pie"></i>Estatísticas</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#" data-toggle="collapse" aria-expanded="false" data-target="#submenu-5"
+              aria-controls="submenu-5" onclick="sair()" id="logoutmenu"><i class="fas fa-sign-out-alt"></i>Sair</a>
+          </li>
+
+        </ul>
+      </div>
+    </nav>
+    </nav>
+  </div>
+</div>
+<body style="width: 100%;background: #090909;">
+
+  <div class="limiter">
+    <div class="container-login100" style="background: #090909;">
+
+      <div id="limiter" class="content" style="display: block;">
+        <div class="col-xl-12 col-lg-12 col-md-6 col-sm-12 col-12"
+          style="padding-left: 0px;padding-top: 0px;padding-right: 0px;">
+          <div id=resumo2 class="wrap-login100" style="padding-bottom: 20px;">
+            <div style="display: flex;margin-bottom: 10px;">
+              <h5 class="titlecard" style="padding-left: 10px;color: white;" id="title">Estatísticas</h5>
+              <div style="display: flex; margin-left: auto;margin-right: 0px;">
+              </div>
+            </div>
+            <div style="display: flex;">
+              <div class="col-xl-4 col-lg-4 col-md-7 col-sm-15 col-15"
+                style="padding-left: 0px;padding-top: 0px;padding-right: 20px;">
+                <div id=resumo2 class="boxvalue" style="padding-bottom: 12px;padding-left: 0px;">
+                  <h5 class="titlecard" style="padding-left: 20px;margin-bottom: 0px;"id="general">Geral</h5>
+                  <div id="c3chart_donut"></div>
+                </div>
+              </div>
+              <div class="col-xl-4 col-lg-4 col-md-7 col-sm-15 col-15"
+                style="padding-left: 0px;padding-top: 0px;padding-right: 20px;">
+                <div id=resumo2 class="boxvalue">
+                  <h5 class="titlebox" id="health_title">Índice de saúde</h5>
+                  <h5 class="valuebox" id="healthvalue" style="color: #29bf12;">-%</h5>
+                </div>
+                <div id=resumo2 class="boxvalue" style="margin-top: 14px;">
+                  <h5 class="titlebox" id="total_title">Total de senhas</h5>
+                  <h5 class="valuebox" id="totalvalue"style="color: white;">-</h5>
+                </div>
+                <div id=resumo2 class="boxvalue" style="margin-top: 14px;">
+                  <h5 class="titlebox" id="repeated_title">Senhas repetidas</h5>
+                  <h5 class="valuebox" id="repeatedvalue" style="color: white;">-</h5>
+                </div>
+                <div id=resumo2 class="boxvalue" style="margin-top: 14px;">
+                  <h5 class="titlebox" id="subscription_title">Usuários/Assinaturas</h5>
+                  <h5 class="valuebox" id="subscriptionsvalue"style="color: white;">-</h5>
+                </div>
+              </div>
+              <div class="col-xl-4 col-lg-4 col-md-7 col-sm-15 col-15"
+                style="padding-left: 0px;padding-top: 0px;padding-right: 0px;">
+                <div id=resumo2 class="boxvalue" style="padding-bottom: 20px;">
+                  <h5 class="titlebox" id="categoria_title">Principais categorias</h5>
+                  <h5 id="categoria1label" class="titlebar">Websites e apps</h5>
+                  <div class="progress mb-3" style="margin-left: 12px;margin-right: 12px;">
+                    <div id="categoria1" class="progress-bar" role="progressbar" style="width: 65%;background-color: #1E94FE;"
+                      aria-valuenow="65" aria-valuemin="0" aria-valuemax="100">-%</div>
+                  </div>
+                  <h5 id="categoria2label" class="titlebar" style="padding-top: 0px;">Bancos e investimentos</h5>
+                  <div class="progress mb-3" style="margin-left: 12px;margin-right: 12px;">
+                    <div id="categoria2" class="progress-bar" role="progressbar" style="width: 65%;background-color: #1E94FE;"
+                      aria-valuenow="65" aria-valuemin="0" aria-valuemax="100">-%</div>
+                  </div>
+                  <h5  id="categoria3label"class="titlebar" style="padding-top: 0px;">Comércio</h5>
+                  <div class="progress mb-3" style="margin-left: 12px;margin-right: 12px;">
+                    <div id="categoria3" class="progress-bar" role="progressbar" style="width: 65%;background-color: #1E94FE;"
+                      aria-valuenow="65" aria-valuemin="0" aria-valuemax="100">-%</div>
+                  </div>
+                  <h5 id="categoria4label" class="titlebar" style="padding-top: 0px;">Governo</h5>
+                  <div class="progress mb-3" style="margin-left: 12px;margin-right: 12px;">
+                    <div id="categoria4" class="progress-bar" role="progressbar" style="width: 65%;background-color: #1E94FE;"
+                      aria-valuenow="65" aria-valuemin="0" aria-valuemax="100">-%</div>
+                  </div>
+                  <h5 id="categoria5label" class="titlebar" style="padding-top: 0px;">Acessos</h5>
+                  <div class="progress mb-3" style="margin-left: 12px;margin-right: 12px;">
+                    <div id="categoria5" class="progress-bar" role="progressbar" style="width: 65%;background-color: #1E94FE;"
+                      aria-valuenow="65" aria-valuemin="0" aria-valuemax="100">-%</div>
+                  </div>
+                  <h5 id="categoria6label"class="titlebar" style="padding-top: 0px;">Viagens</h5>
+                  <div class="progress mb-3" style="margin-left: 12px;margin-right: 12px;">
+                    <div id="categoria6" class="progress-bar" role="progressbar" style="width: 65%;background-color: #1E94FE;"
+                      aria-valuenow="65" aria-valuemin="0" aria-valuemax="100">-%</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div style="display: flex;">
+              <h5 class="titlecard" style="padding-left: 10px;color: white;" id="users_title">Principais usuários</h5>
+              <div style="display: flex; margin-left: auto;margin-right: 0px;">
+              </div>
+            </div>
+            <input type="text" id="search" onkeyup="searchPass()" placeholder="Buscar usuário..." title="Type in a name"
+              style="right: 50%;">
+            <table id="tabela" class="table-element">
+              <thead>
+                <tr class="header">
+                  <th id="emailtitle" style="width:20%;border-radius: 10px 0 0 0;">Email</th>
+                  <th id="strongtitle" style="width:10%;color: #29bf12;"><span class="green" id="strong_title">Fortes</span></th>
+                  <th id="regulartitle" style="width:10%;border-radius: 0 10px 0 10px;color: #F5BB00;">
+                    <span class="yellow"id="regular_title">Regulares</span>
+                  </th>
+                  <th id="weaktitle" style="width:10%;border-radius: 0 10px 0 10px;color: #ea1b4b;"><span class="red"id="weak_title">Fracas</span></th>
+                  <th id="repeatedtitle" style="width:10%;border-radius: 0 10px 0 10px;"><span class="white"id="repeated_title_table">Repetidas</span></th>
+                </tr>
+              </thead>
+              <tbody id="table-body">
+
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div id="loading" style="position: absolute; left: 50%;top: 50%;">
+    <div style="position: relative; left: -50%;">
+      <div id="spinner" class="spinner-border text-primary"
+        style="width: 50px;height: 50px;margin-right: auto;margin-left: auto;display: block;"></div>
+      <h3 id="loadinglabel"
+        style="max-width: 600px;text-align: center;margin-top: 5px;margin-left: auto;margin-right: auto;display: block;color: white;margin-top: 20px;font-size: 14px;">
+        Buscando usuários...</h3>
+    </div>
+  </div>
+  <script src="vendor/jquery/jquery-3.6.0.min.js"></script>
+  <script src="js/qrcode.js" defer></script>
+  <script src="js/global.js"></script>
+  <script src="js/aes.js"></script>
+  <script src="js/translate.js"></script>
+  <script src="c3charts/c3.min.js"></script>
+  <script src="c3charts/d3-5.4.0.min.js"></script>
+  <script type="text/javascript" src="js/estatisticas.js" type="text/javascript"></script>
+  <script src="vendor/iconify-icon.min.js"></script>
+  <script type="module" src="/js/firebase.js"></script>
+  <script src="vendor/bootstrap/js/popper.min.js"></script>
+  <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+  <script src="vendor/bootstrap-select/js/bootstrap-select.js"></script>
+
+</body>
+</html>

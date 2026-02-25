@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title id="page">iSenhas WEB</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <link href="favicon.ico" rel="shortcut icon">
+    <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/switch.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/notas.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/sidebar.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/usuarios.css" rel="stylesheet">
+    <link rel="stylesheet" href="vendor/bootstrap-select/css/bootstrap-select.css">
+    <link rel="stylesheet" href="vendor/fontawesome/css/fontawesome-all.css">
+    <link href="vendor/fontawesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="fonts/font-awesome-4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="vendor/bootstrap/css/bootstrap.min.css">
+</head>
+<div class="nav-left-sidebar sidebar-primary">
+    <div class="menu-list">
+        <nav class="navbar navbar-expand-lg navbar-light">
+            <a class="d-xl-none d-lg-none" href="#">Notas</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav flex-column">
+                    <li class="nav-divider">
+                        Menu
+                    </li>
+                    <li class="nav-item ">
+                        <a class="nav-link" href="#" data-toggle="collapse" aria-expanded="false"
+                            data-target="#submenu-1" aria-controls="submenu-1" onclick="senhas()" id="passwordsmenu"><i
+                                class="fas fa-key"></i>Senhas</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="#" data-toggle="collapse" aria-expanded="false" data-target="#submenu-1"
+                        aria-controls="submenu-1" onclick="doc()" id="docsmenu"><i class="fa fa-id-card"></i>Documentos</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="#" data-toggle="collapse" aria-expanded="false"
+                          data-target="#submenu-1" aria-controls="submenu-1" onclick="pix()" id="pixmenu"><i
+                              class="fas fa-key" ></i>Chaves Pix</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#" data-toggle="collapse" aria-expanded="false"
+                            data-target="#submenu-2" aria-controls="submenu-2" onclick="notas()" id="notesmenu"><i
+                                class="fas fa-sticky-note"></i>Notas</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="#" data-toggle="collapse" aria-expanded="false"
+                          data-target="#submenu-2" aria-controls="submenu-2" onclick="alertas()" id="alertsmenu"><i
+                              class="fas fa-exclamation-triangle" ></i>Alertas</a>
+                  </li>
+                  <li class="nav-item" id="usersmenu"style="display: none;">
+                    <a class="nav-link" id="usersmenu2" href="#" data-toggle="collapse" aria-expanded="false"
+                        data-target="#submenu-6" aria-controls="submenu-6" onclick="users()" id="logoutmenu"><i
+                            class="fas fa-users" ></i>Usuários</a>
+                </li>
+                <li class="nav-item" id="estatisticasmenu" style="display: block;">
+                  <a class="nav-link " id="estatisticasmenu2" href="#" data-toggle="collapse" aria-expanded="false"
+                    data-target="#submenu-6" aria-controls="submenu-6" onclick="estatisticas()" id="logoutmenu"><i
+                    class="fas fa-chart-pie"></i>Estatísticas<span class="red"id="new_title" style="margin-left:17%">Novo</span></a>
+                </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-toggle="collapse" aria-expanded="false"
+                            data-target="#submenu-5" aria-controls="submenu-5" onclick="sair()"id="logoutmenu"><i
+                                class="fas fa-sign-out-alt"></i>Sair</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        </nav>
+    </div>
+</div>
+<body style="width: 100%;background: #090909;">
+    
+    <div class="limiter">
+        <div class="container-login100" style="background: #090909;">
+
+            <div id="limiter" class="content" style="display: block;">
+                <div class="col-xl-12 col-lg-12 col-md-6 col-sm-12 col-12"
+                    style="padding-left: 0px;padding-top: 0px;padding-right: 0px;">
+                    <div id=resumo2 class="wrap-login100" style="padding-bottom: 20px;">
+                      <div style="display: flex;">
+                        <h5 class="titlecard" style="padding-left: 10px;color: white;"id="title">Notas</h5>
+                        <div style="display: flex; margin-left: auto;margin-right: 0px;">
+                        <button id="buttonadd" onclick="add()"  class="button5" target="_top" >ADICIONAR</button>
+                        <button id="buttonremove" onclick="excluir()"  class="button7" target="_top" >EXCLUIR</button>
+                        </div>
+                      </div>
+                        <input type="text" id="search" onkeyup="searchPass()" placeholder="Buscar nota..." title="Type in a name" style="right: 50%;">
+                        <table id="tabela" class="table-element">
+                            <thead>
+                                <tr class="header">
+                                    <th id="nametitle" style="width:20%;border-radius: 10px 0 0 0;">Nome</th>
+                                    <th id="passwordtitle" style="width:40%;border-radius: 0 10px 0 10px;">Nota</th>
+                                    <th id="copytitle" style="width:10%;border-radius: 0 10px 0 10px;">Copiar</th>
+                                    <th id="edittitle" style="width:10%;border-radius: 0 10px 0 10px;">Editar</th>
+                                    <th id="recordNametitle" style="width:1%;border-radius: 0 10px 0 10px;display: none;">recordName</th>
+                                    <th id="recordChangeTagtitle" style="width:1%;border-radius: 0 10px 0 10px;display: none;">recordChangeTag</th>
+                                    <th id="sharetitle" style="width:10%;border-radius: 0 10px 0 10px;">Compartilhar</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-body">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="loading" style="position: absolute; left: 50%;top: 50%;">
+        <div style="position: relative; left: -50%;">
+            <div id="spinner" class="spinner-border text-primary"
+                style="width: 50px;height: 50px;margin-right: auto;margin-left: auto;display: block;"></div>
+            <h3 id="loadinglabel"
+                style="max-width: 600px;text-align: center;margin-top: 5px;margin-left: auto;margin-right: auto;display: block;color: white;margin-top: 20px;font-size: 14px;">
+                Buscando notas...</h3>
+        </div>
+    </div>
+    <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true" >
+        <div class="modal-dialog" role="document" >
+          <div class="modal-content" style="background: #262628;">
+            <div class="modal-header">
+              <h5 class="modal-title" id="addModalLabel" style="color: #fff;">Adicionar nota</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: #fff;">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form>
+                  <div class="form-group">
+                    <label for="recipient-name" class="col-form-label" style="color: #fff;" id="nomeaddlabel">Nome</label>
+                    <input type="text" class="form-control" id="nomeadd" placeholder="Ex.: Lembrar" required="required" pattern="[A-Za-z0-9]{1,20}" required style="color: #fff; background: #262628;">
+                  </div>
+                  <div class="form-group">
+                    <label for="recipient-name" class="col-form-label" style="color: #fff;" id="notaaddlabel">Nota</label>
+                    <textarea rows="3" type="text" class="form-control" id="notaadd" placeholder="Ex.: Minha nota" style="color: #fff; background: #262628;"></textarea>
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0px;" id="mailLabel">
+                    <label for="recipient-name" class="col-form-label" style="color: #fff;" id="vaultaddlabel">Vaul</label>
+                  </div>
+                  <div class="form-group">
+                    <select class="selectpicker" id="vaultaddoptions" name="vaultaddoptions" placeholder="Ex.: USER" style="color: #fff;width: 100%;" data-width="100%" required>
+                    </select>
+                  </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal" id="canceladd">CANCELAR</button>
+              <button type="button" class="btn btn-primary" onclick="buttonadicionar()" style="background: #3A9DFC; border-color: #3A9DFC;" id="addadd">ADICIONAR</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal fade" id="excluirModal" tabindex="-1" role="dialog" aria-labelledby="excluirModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content" style="background: #262628;">
+            <div class="modal-header">
+              <h5 class="modal-title" id="excluirModalLabel" style="color: #fff;">Excluir notas</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: #fff;">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body" style="color: #fff;" id="removedesc">
+              Você realmente gostaria de excluir as notas selecionadas?
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal" id="removecancel">CANCELAR</button>
+              <button type="button" onclick="buttonremove()" data-dismiss="modal" class="btn btn-primary" style="background: #F4364C; border-color: #F4364C;" id="removeremove">EXCLUIR</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal fade" id="editarModal" tabindex="-1" role="dialog" aria-labelledby="addModalLabel" aria-hidden="true" >
+        <div class="modal-dialog" role="document" >
+          <div class="modal-content" style="background: #262628;">
+            <div class="modal-header">
+              <h5 class="modal-title" id="editModalLabel" style="color: #fff;">Editar nota</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: #fff;">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form>
+                  <div class="form-group">
+                    <label for="recipient-name" class="col-form-label" style="color: #fff;" id="nomeeditlabel">Nome</label>
+                    <input type="text" class="form-control" id="nomeedit" placeholder="Ex.: Lembrar" required="required" pattern="[A-Za-z0-9]{1,20}" required style="color: #fff; background: #262628;">
+                  </div>
+                  <div class="form-group">
+                    <label for="recipient-name" class="col-form-label" style="color: #fff;"id="notaeditlabel">Nota</label>
+                    <textarea rows="3" type="text" class="form-control" id="notaedit" placeholder="Ex.: Minha nota" style="color: #fff; background: #262628;"></textarea>
+                  </div>
+                  <div class="form-group" style="margin-bottom: 0px;" id="mailLabel">
+                    <label for="recipient-name" class="col-form-label" style="color: #fff;" id="vaulteditlabel">Vaul</label>
+                  </div>
+                  <div class="form-group">
+                    <select class="selectpicker" id="vaulteditoptions" name="vaulteditoptions" placeholder="Ex.: USER" style="color: #fff; width: 100%;" data-width="100%" required>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <div style="display: flex;" id="favswitch">
+                    </div>
+                  </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal" id="canceledit">CANCELAR</button>
+              <button type="button" class="btn btn-primary" onclick="buttoneditar()" style="background: #3A9DFC; border-color: #3A9DFC;" id="saveedit">SALVAR</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal fade" id="shareErrorModal" tabindex="-1" role="dialog" aria-labelledby="ShareErrorModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content" style="background: #262628;">
+          <div class="modal-header">
+            <h5 class="modal-title" id="shareErrorModalLabel" style="color: #fff;" >Atenção</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: #fff;">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body" style="color: #fff;" id="shareErrordesc">
+            Você não tem permissão para modificar notas compartilhadas.
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal" style="background: #3A9DFC; border-color: #3A9DFC;" id="shareErrorcancel">OK</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="shareModal" tabindex="-1" role="dialog" aria-labelledby="shareModalLabel" aria-hidden="true" >
+      <div class="modal-dialog" role="document" >
+        <div class="modal-content" style="background: #262628;">
+          <div class="modal-header">
+            <h5 class="modal-title" id="shareModalLabel" style="color: #fff;">Compartilhar</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: #fff;">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form>
+                <div class="form-group" style="margin-bottom: 0px;">
+                  <label for="recipient-name" class="col-form-label" style="color: #fff;" id="emailsharelabel">Email</label>
+                </div>
+                <div class="form-group">
+                  <div style="display: flex;" id="selectormail">
+                    <select class="selectpicker" id="sharedoptions" name="sharedoptions" placeholder="Ex.: USER" style="color: #fff; background: #262628;" required>
+                    </select>
+                    <button type="button" class="btn btn-primary" onclick="addshare()" style="background: #3A9DFC; border-color: #3A9DFC;margin-left: 10px;" id="addshareb">+</button>
+                  </div>    
+                </div>
+                <div class="form-group">
+                   <table id="tabelashare" class="table-element">
+                       <thead>
+                           <tr class="header">
+                               <th id="emailsharetitle" style="width:80%;border-radius: 10px 0 0 0;">Email</th>
+                               <th id="removesharetitle" style="width:20%;border-radius: 10px 0 0 0;">Excluir</th>
+                           </tr>
+                       </thead>
+                       <tbody id="table-body-share">
+                       </tbody>
+                   </table>
+                </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" id="cancelshare">CANCELAR</button>
+            <button type="button" class="btn btn-primary" onclick="buttonshare()" style="background: #3A9DFC; border-color: #3A9DFC;" id="saveshare">SALVAR</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="shareModalPremium" tabindex="-1" role="dialog" aria-labelledby="shareModalLabelPremium" aria-hidden="true" >
+      <div class="modal-dialog" role="document" >
+        <div class="modal-content" style="background: #262628;">
+          <div class="modal-header">
+            <h5 class="modal-title" id="shareModalLabelPremium" style="color: #fff;">Compartilhar</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: #fff;">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form>
+                <div class="form-group" style="margin-bottom: 0px;">
+                  <label for="recipient-name" class="col-form-label" style="color: #fff;" id="emailsharelabelpremium">Email</label>
+                </div>
+                <div class="form-group">
+                  <div style="display: flex;">
+                    <input type="text" class="form-control" id="emailsharepremium" placeholder="Ex.: usuario@email.com" style="color: #fff; background: #262628;">
+                    <button type="button" class="btn btn-primary" onclick="addsharepremium()" style="background: #3A9DFC; border-color: #3A9DFC;margin-left: 10px;" id="addsharebpremium">+</button>
+                  </div>    
+                </div>
+                <div class="form-group">
+                   <table id="tabelasharepremium" class="table-element">
+                       <thead>
+                           <tr class="header">
+                               <th id="emailsharetitlepremium" style="width:80%;border-radius: 10px 0 0 0;">Email</th>
+                               <th id="removesharetitlepremium" style="width:20%;border-radius: 10px 0 0 0;">Excluir</th>
+
+                           </tr>
+                       </thead>
+                       <tbody id="table-body-share-premium">
+                       </tbody>
+                   </table>
+                </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" id="cancelsharepremium">CANCELAR</button>
+            <button type="button" class="btn btn-primary" onclick="buttonsharepremium()" style="background: #3A9DFC; border-color: #3A9DFC;" id="saveshare">SALVAR</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal fade" id="shareErrorModal" tabindex="-1" role="dialog" aria-labelledby="ShareErrorModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content" style="background: #262628;">
+          <div class="modal-header">
+            <h5 class="modal-title" id="shareErrorModalLabel" style="color: #fff;" >Atenção</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="color: #fff;">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body" style="color: #fff;" id="shareErrordesc">
+            Você não tem permissão para modificar senhas compartilhadas.
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-dismiss="modal" style="background: #3A9DFC; border-color: #3A9DFC;" id="shareErrorcancel">OK</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="vendor/jquery/jquery-3.6.0.min.js"></script>
+    <script src="js/qrcode.js" defer></script>
+    <script src="js/global.js"></script>
+    <script src="js/translate.js"></script>
+    <script src="js/aes.js"></script>
+    <script type="text/javascript" src="js/notas.js" type="text/javascript"></script>
+    <script src="vendor/iconify-icon.min.js"></script>
+    <script src="vendor/bootstrap/js/popper.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script src="vendor/bootstrap-select/js/bootstrap-select.js"></script>
+    <script type="module" src="/js/firebase.js"></script>
+</body>
+</html>
