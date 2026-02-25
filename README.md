@@ -6,6 +6,29 @@ This repository contains the **public client implementation** of the iSenhas web
 
 ---
 
+## 🔐 Security
+
+Security and transparency are core principles of iSenhas.
+
+This repository contains the public client-side code of the website, allowing independent review and community auditing.
+
+### Security Documentation
+
+- 📄 [Security Policy](SECURITY.md)
+- 🛡️ [Threat Model](THREAT_MODEL.md)
+
+### Security Features
+
+- Client-side encryption
+- AES-256 encryption
+- PBKDF2 key derivation
+- Optional Zero-Knowledge architecture
+- No transmission of master passwords
+- Minimal browser permissions
+- Defense-in-depth design
+
+We welcome responsible security research and community feedback.
+
 ## 🔐 Security First
 
 iSenhas is built around a security-centric architecture:
