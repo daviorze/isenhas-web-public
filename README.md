@@ -29,17 +29,6 @@ This repository contains the public client-side code of the website, allowing in
 
 We welcome responsible security research and community feedback.
 
-## 🔐 Security First
-
-iSenhas is built around a security-centric architecture:
-
-- Client-side encryption
-- Optional Zero-Knowledge mode
-- Local cryptographic operations
-- No plaintext secrets transmitted to the server in Zero-Knowledge mode
-
-All sensitive encryption processes happen locally on the user’s device.
-
 ---
 
 ## 🌐 Repository Scope
