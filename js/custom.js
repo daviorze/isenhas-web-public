@@ -1,5 +1,7 @@
 $(window).on('load', function(){
+
 	"use strict";
+
 	document.getElementById("home").innerHTML = gettranslate("home");
 	document.getElementById("about").innerHTML = gettranslate("about");
 	document.getElementById("security").innerHTML = gettranslate("security");
@@ -26,12 +28,11 @@ $(window).on('load', function(){
 	document.getElementById("prepare_title").innerHTML = gettranslate("prepare_title");
 	document.getElementById("prepare_sub1").innerHTML = "<i class=\"fa fa-shield\" style=\"color: #0099fa;\"></i> "+ gettranslate("prepare_sub1");
 	document.getElementById("prepare_sub2").innerHTML = "<i class=\"fa fa-cloud\" style=\"color: #0099fa;\"></i> "+gettranslate("prepare_sub2");
-	document.getElementById("prepare_sub3").innerHTML = "<i class=\"fa fa-key\" style=\"color: #0099fa;\"></i> "+gettranslate("prepare_sub3");
 	document.getElementById("prepare_sub4").innerHTML = "<i class=\"fa fa-mobile\" style=\"color: #0099fa;\"></i> "+gettranslate("prepare_sub4");
 	document.getElementById("prepare_sub5").innerHTML = "<i class=\"fa fa-user\" style=\"color: #0099fa;\"></i> "+gettranslate("prepare_sub5");
 	document.getElementById("prepare_sub6").innerHTML = "<i class=\"fa fa-share-alt\" style=\"color: #0099fa;\"></i> "+gettranslate("prepare_sub6");
 	document.getElementById("prepare_sub7").innerHTML = "<i class=\"fa fa-user-secret\" style=\"color: #0099fa;\"></i> "+gettranslate("prepare_sub7");
-	document.getElementById("get_app").innerHTML = gettranslate("get_app");
+	document.getElementById("prepare_sub8").innerHTML = "<i class=\"fa fa-github\" style=\"color: #0099fa;\"></i> "+gettranslate("prepare_sub8");
 	document.getElementById("explore_title").innerHTML = gettranslate("explore_title");
 	document.getElementById("explore_sub").innerHTML = gettranslate("explore_sub");
 	document.getElementById("us_sub").innerHTML = gettranslate("us_sub");
@@ -118,16 +119,22 @@ $(window).on('load', function(){
 	document.getElementById("popularapps").src = gettranslate("popularapps");
 	document.getElementById("appswelove").src = gettranslate("appswelove");
 	document.getElementById("apple_ecamp").src = gettranslate("apple_ecamp");
+
 	document.getElementById("appswelove_link").href = gettranslate("appswelove_link");
 	document.getElementById("popularapps_link").href = gettranslate("popularapps_link");
+
 	document.getElementById("social").innerHTML = gettranslate("social");
 	document.getElementById("logo").innerHTML = gettranslate("isenhas");
 	document.getElementById("privacy").innerHTML = gettranslate("privacy");
 	document.getElementById("privacy").href = gettranslate("privacy-href");
+
+	
 	document.getElementById("business_price").innerHTML = gettranslate("business_price");
 	document.getElementById("business_month").innerHTML = gettranslate("business_month");
 	document.getElementById("business_get").innerHTML = gettranslate("business_get");
 	document.getElementById("business_download").innerHTML = gettranslate("business_download");
+
+	
 	document.getElementById("plan3_arg1").innerHTML = "<i class=\"fa fa-check\" style=\"color: #0099fa;\"></i>"+gettranslate("plan3_arg1");
 	document.getElementById("plan3_arg2").innerHTML = "<i class=\"fa fa-check\" style=\"color: #0099fa;\"></i>"+gettranslate("plan3_arg2");
 	document.getElementById("plan3_arg3").innerHTML = "<i class=\"fa fa-check\" style=\"color: #0099fa;\"></i>"+gettranslate("plan3_arg3");
@@ -135,6 +142,11 @@ $(window).on('load', function(){
 	document.getElementById("plan3_arg5").innerHTML = "<i class=\"fa fa-check\" style=\"color: #0099fa;\"></i>"+gettranslate("plan3_arg5");
 	document.getElementById("plan3_arg6").innerHTML = "<i class=\"fa fa-check\" style=\"color: #0099fa;\"></i>"+gettranslate("plan3_arg6");
 	document.getElementById("business_free").innerHTML = gettranslate("business_free");
+
+
+	
+
+	
 	$('#owl1').owlCarousel({
 	    loop:true,
 	    margin:10,
@@ -175,6 +187,9 @@ $(window).on('load', function(){
 	        }
 	    }
 	})
+ 
+
+	
 	$(window).on('scroll', function() {
 		if($(this).scrollTop() > 450) {
 			$('.navbar-fixed-top').addClass('opaque');
@@ -182,13 +197,16 @@ $(window).on('load', function(){
 			$('.navbar-fixed-top').removeClass('opaque');
 		}
 	});
+ 
+	
 	  $(".navbar-nav li a").on('click', function(event) {
 	    $(".navbar-collapse").collapse('hide');
 	  });
-
+	
 	$('#navbar-collapse-02').onePageNav({
 		filter: ':not(.external)'
 	});
+	
 	$(".nav li a, a.scrool, .baixar").on('click', function(e) {
 		
 		var full_url = this.href;
@@ -206,6 +224,7 @@ $(window).on('load', function(){
 			return false;
 		
 	});
+	
 	$('.newsletter_box .newsletter_form').each( function(){
 		var form = $(this);
 		//form.validate();
@@ -222,6 +241,7 @@ $(window).on('load', function(){
 			}
 		});
 	});	
+	
 	$('#register-form').each( function(){
 		var form = $(this);
 		//form.validate();
