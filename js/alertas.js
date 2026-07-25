@@ -73,18 +73,13 @@ caracteresEdit.onchange = function() {
 }
 function getPasswords() {
   todasSenhas = [];
-  var token = getCookie("tokenis");
-  if (token == null || token == "") {
-    window.location = 'login.html';
-  }
   loadinglabel.innerHTML = gettranslate("search_passwords")+"...";
   var xhr = new XMLHttpRequest();
-  var url = host+"/iSenhasBuscarSenhasV4";
-  if(development) url = host+"/iSenhasBuscarSenhasV4DEV";
+  var url = host+"/iSenhasBuscarSenhasV5";
+  if(development) url = host+"/iSenhasBuscarSenhasV5DEV";
   xhr.open("POST", url, true);
   xhr.setRequestHeader("Content-Type", "application/json");
-  xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
-  xhr.setRequestHeader('authorization', token);
+  xhr.withCredentials = true;
 
   xhr.onreadystatechange = async function () {
     if (xhr.readyState === 4 && xhr.status === 200) {
@@ -164,18 +159,13 @@ function getPasswords() {
 }
 function getVaults() {
   vaults = [];
-  var token = getCookie("tokenis");
-  if (token == null || token == "") {
-    window.location = 'login.html';
-  }
   loadinglabel.innerHTML = gettranslate("search_vaults") + "...";
   var xhr = new XMLHttpRequest();
-  var url = host + "/iSenhasBuscarCofresV4";
-  if (development) url = host + "/iSenhasBuscarCofresV4DEV";
+  var url = host + "/iSenhasBuscarCofresV5";
+  if (development) url = host + "/iSenhasBuscarCofresV5DEV";
   xhr.open("POST", url, true);
   xhr.setRequestHeader("Content-Type", "application/json");
-  xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
-  xhr.setRequestHeader('Authorization', token);
+  xhr.withCredentials = true;
 
   xhr.onreadystatechange = function () {
     if (xhr.readyState === 4 && xhr.status === 200) {
@@ -223,11 +213,26 @@ function notas(){
   window.location = "notas.html";
 }
 async function sair() {
-  document.cookie = "tokenis=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  loading.style.display = "block";
+  limiter.style.display = "none";
+  loadinglabel.innerHTML = gettranslate("leaving") + "...";
   document.cookie = "permission=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
   document.cookie = "recovery=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
   await deleteKey();
-  window.location = 'login.html';
+  var xhr = new XMLHttpRequest();
+  var url = host + "/iSenhasLogoutV5";
+  if (development) url = host + "/iSenhasLogoutV5DEV";
+  xhr.open("POST", url, true);
+  xhr.setRequestHeader("Content-Type", "application/json");
+  xhr.withCredentials = true;
+
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState === 4 ) {
+      window.location = 'login.html';
+    } 
+  };
+
+  xhr.send();
 }
 function users() {
   window.location = 'usuarios.html';
@@ -267,28 +272,28 @@ function reloadTable(){
     cloudPasswords = todasSenhas;
     var acumulador = 0;
     for(var i=0;i<todasSenhas.length;i++){
-        var password = todasSenhas[i];
-        var named = password.fields.name.value;
-        var observation = "-";
-        var type = "-";
-        var category = getListIconFromText(password.fields.name.value).category;
-        var imageName = getListIconFromText(password.fields.name.value).image;
-        var vaultid = "0"
-        if(password.fields.vaultid != null){
-          vaultid = password.fields.vaultid.value
+      var password = todasSenhas[i];
+      var named = password.fields.name.value;
+      var observation = "-";
+      var type = "-";
+      var category = getListIconFromText(password.fields.name.value).category;
+      var imageName = getListIconFromText(password.fields.name.value).image;
+      var vaultid = "0"
+      if(password.fields.vaultid != null){
+        vaultid = password.fields.vaultid.value
+      }
+      var vaultName = gettranslate("personal")
+      for (var x = 0; x < vaults.length; x++){
+        let currentid = vaults[x].recordName
+        if(currentid == vaultid){
+          vaultName = vaults[x].name
         }
-        var vaultName = gettranslate("personal")
-        for (var x = 0; x < vaults.length; x++){
-          let currentid = vaults[x].recordName
-          if(currentid == vaultid){
-            vaultName = vaults[x].name
-          }
-        }
-        var display = "none"
-        if(vaults.length>0){
-          display = "block"
-        }
-        if(category != "bank" && category != "document" && category!="note"&& imageName != "tim" && imageName != "whatsapp" && imageName != "fgts" && imageName != "cofre" && imageName != "iphone" && imageName != "giassi" && imageName != "samae"){
+      }
+      var display = "none"
+      if(vaults.length>0){
+        display = "block"
+      }
+      if(category != "bank" && category != "document" && category!="note"&& imageName != "tim" && imageName != "whatsapp" && imageName != "fgts" && imageName != "cofre" && imageName != "iphone" && imageName != "giassi" && imageName != "samae"){
           var strength = updateInput(password.fields.password.value)
           var add = false;
           strengthLabel = "";
@@ -327,35 +332,20 @@ function reloadTable(){
             var image = getListIconFromText(named).image;
             if(type == "note") image = "note";
             acumulador++
-            $('#table-body').append(`
-                    <tr class="rows" id='${acumulador}'>            
-                      <td class= "info" id="name${i + 1}">
-                    <div style="display: flex;">   
-                      <img style="height:24px;margin-right:10px;" alt="Qries" src="../images/iconsmart/${image}.png" data-toggle="modal" data-target="#exampleModal" data-whatever="@fat" onClick= "copy(${i + 1})"/>
-                    <div>
-                    <div>${named}</div>
-                      <div id="passvault${i + 1}" style="font-size:10px;margin-top:5px;display:${display}">${vaultName}</div>
-                    </div>
-                     </div>
-                    </td>
-                      <td class= "info" id="observation" >
-                        <span class=${level}>${strengthLabel}</span>
-                      </td>
-                      <td class= "info" id="pass" ><input id="password" class="passwordRow" type="password" value="${pass}" readonly/></td>
-                    <td class= "info" style="text-align:left;">
-                        <i class="far fa-eye-slash" onClick= "showHide(${acumulador})"></i>
-                    </td> 
-                    <td class= "info" style="text-align:left;">
-                    <i class="far fa-copy" onClick= "copy(${acumulador})"></i>
-                    </td>
-                    <td class= "info" style="text-align:left;">
-                    <i class="far fa-edit" onClick= "edit(${i+1})"></i>
-                    </td>
-                    <td class= "info" id="recordName"  style="display: none;">${password.recordName}</td>
-                    <td class= "info" id="recordChangeTag"  style="display: none;">${password.recordChangeTag}</td>
-                    </tr>
-                `)
-          }
+            addPasswordRow({
+              acumulador,
+              i,
+              image,
+              named,
+              vaultName,
+              display,
+              level,
+              strengthLabel,
+              pass,
+              recordName: password.recordName,
+              recordChangeTag: password.recordChangeTag
+          });
+        }
       } else if(category!="note") {
         if(passwordRepeated(cloudPasswords,password.fields.password.value)){
           level = "yellow";
@@ -366,41 +356,191 @@ function reloadTable(){
             var image = getListIconFromText(named).image;
             if(type == "note") image = "note";
             acumulador++
-            $('#table-body').append(`
-                    <tr class="rows" id='${acumulador}'>            
-                       <td class= "info" id="name${i + 1}">
-                    <div style="display: flex;">   
-                      <img style="height:24px;margin-right:10px;" alt="Qries" src="../images/iconsmart/${image}.png" data-toggle="modal" data-target="#exampleModal" data-whatever="@fat" onClick= "copy(${i + 1})"/>
-                    <div>
-                    <div>${named}</div>
-                      <div id="passvault${i + 1}" style="font-size:10px;margin-top:5px;display:${display}">${vaultName}</div>
-                    </div>
-                     </div>
-                    </td>
-                      <td class= "info" id="observation" >
-                        <span class=${level}>${strengthLabel}</span>
-                      </td>
-                      <td class= "info" id="pass" ><input id="password" class="passwordRow" type="password" value="${pass}" readonly/></td>
-                    <td class= "info" style="text-align:left;">
-                        <i class="far fa-eye-slash" onClick= "showHide(${acumulador})"></i>
-                    </td> 
-                    <td class= "info" style="text-align:left;">
-                    <i class="far fa-copy" onClick= "copy(${acumulador})"></i>
-                    </td>
-                    <td class= "info" style="text-align:left;">
-                    <i class="far fa-edit" onClick= "edit(${i+1})"></i>
-                    </td>
-                    <td class= "info" id="recordName"  style="display: none;">${password.recordName}</td>
-                    <td class= "info" id="recordChangeTag"  style="display: none;">${password.recordChangeTag}</td>
-                    </tr>
-                `)
-          }
+            addPasswordRow({
+              acumulador,
+              i,
+              image,
+              named,
+              vaultName,
+              display,
+              level,
+              strengthLabel,
+              pass,
+              recordName: password.recordName,
+              recordChangeTag: password.recordChangeTag
+          });
+        }
       }
     }
     loading.style.display = "none";
     limiter.style.display = "block";
     refreshOptionsVault();
 
+}
+function addPasswordRow(data) {
+    const {
+        acumulador,
+        i,
+        image,
+        named,
+        vaultName,
+        display,
+        level,
+        strengthLabel,
+        pass,
+        recordName,
+        recordChangeTag
+    } = data;
+    const tr = $("<tr>", {
+        class: "rows",
+        id: acumulador
+    });
+
+    // Nome + ícone
+    const tdName = $("<td>", {
+        class: "info",
+        id: `name${i + 1}`
+    });
+
+    const divFlex = $("<div>").css("display", "flex");
+
+    const img = $("<img>", {
+        height: 24,
+        alt: "icon",
+        src: `../images/iconsmart/${encodeURIComponent(image)}.png`
+    })
+    .css({
+        "margin-right": "10px"
+    })
+    .attr({
+        "data-toggle": "modal",
+        "data-target": "#exampleModal",
+        "data-whatever": "@fat"
+    })
+    .on("click", function () {
+        copy(i + 1);
+    });
+
+    const divText = $("<div>");
+
+    $("<div>")
+        .text(named)
+        .appendTo(divText);
+
+    $("<div>", {
+        id: `passvault${i + 1}`
+    })
+    .css({
+        "font-size": "10px",
+        "margin-top": "5px",
+        "display": display
+    })
+    .text(vaultName)
+    .appendTo(divText);
+
+    divFlex.append(img, divText);
+    tdName.append(divFlex);
+
+
+    // Força da senha
+    const tdStrength = $("<td>", {
+        class: "info",
+        id: "observation"
+    });
+
+    $("<span>", {
+        class: level
+    })
+    .text(strengthLabel)
+    .appendTo(tdStrength);
+
+
+    // Senha
+    const tdPass = $("<td>", {
+        class: "info",
+        id: "pass"
+    });
+
+    $("<input>", {
+        id: "password",
+        class: "passwordRow",
+        type: "password",
+        value: pass,
+        readonly: true
+    }).appendTo(tdPass);
+
+
+    // Mostrar senha
+    const tdEye = $("<td>", {
+        class: "info"
+    }).css("text-align", "left");
+
+    $("<i>", {
+        class: "far fa-eye-slash"
+    })
+    .on("click", function () {
+        showHide(acumulador);
+    })
+    .appendTo(tdEye);
+
+
+    // Copiar
+    const tdCopy = $("<td>", {
+        class: "info"
+    }).css("text-align", "left");
+
+    $("<i>", {
+        class: "far fa-copy"
+    })
+    .on("click", function () {
+        copy(acumulador);
+    })
+    .appendTo(tdCopy);
+
+
+    // Editar
+    const tdEdit = $("<td>", {
+        class: "info"
+    }).css("text-align", "left");
+
+    $("<i>", {
+        class: "far fa-edit"
+    })
+    .on("click", function () {
+        edit(i + 1);
+    })
+    .appendTo(tdEdit);
+
+
+    // Campos ocultos
+    $("<td>", {
+        class: "info",
+        id: "recordName"
+    })
+    .css("display", "none")
+    .text(recordName)
+    .appendTo(tr);
+
+
+    $("<td>", {
+        class: "info",
+        id: "recordChangeTag"
+    })
+    .css("display", "none")
+    .text(recordChangeTag)
+    .appendTo(tr);
+
+
+    tr.append(
+        tdName,
+        tdStrength,
+        tdPass,
+        tdEye,
+        tdCopy,
+        tdEdit
+    );
+
+    $("#table-body").append(tr);
 }
 function searchPass(){
     var input, filter, table, tr, td, i, txtValue;
@@ -420,10 +560,11 @@ function searchPass(){
     }       
   }
 }
-function showHide(id){
+function showHide(myid){
   var tr = table.getElementsByTagName("tr");
-  var td = tr[id].getElementsByTagName("td")[2];
-  var tdimage = tr[id].getElementsByTagName("td")[3];
+  var td = tr[myid].getElementsByTagName("td")[4];
+  var tdimage = tr[myid].getElementsByTagName("td")[5];
+
   if(td){
     var img = tdimage.getElementsByTagName("i")[0];
     var p = td.getElementsByTagName("input")[0];
@@ -438,8 +579,8 @@ function showHide(id){
 }
 function copy(id){
   var tr = table.getElementsByTagName("tr");
-  var td = tr[id].getElementsByTagName("td")[2];
-  var tdimage = tr[id].getElementsByTagName("td")[4];
+  var td = tr[id].getElementsByTagName("td")[4];
+  var tdimage = tr[id].getElementsByTagName("td")[6];
 
   if(td){
     var p = td.getElementsByTagName("input")[0];
@@ -527,18 +668,13 @@ function buttoneditar(){
   editSenha();
 }
 async function editSenha() {
-  var token = getCookie("tokenis");
-  if (token == null || token == "") {
-    window.location = 'login.html';
-  }
   loadinglabel.innerHTML = gettranslate("update_password")+"...";
   var xhr = new XMLHttpRequest();
-  var url = host+"/iSenhasAtualizarV4";
-  if(development) url = host+"/iSenhasAtualizarV4DEV";
+  var url = host+"/iSenhasAtualizarV5";
+  if(development) url = host+"/iSenhasAtualizarV5DEV";
   xhr.open("POST", url, true);
   xhr.setRequestHeader("Content-Type", "application/json");
-  xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
-  xhr.setRequestHeader('authorization', token);
+  xhr.withCredentials = true;
 
   xhr.onreadystatechange = function () {
     if (xhr.readyState === 4 && xhr.status === 200) {
@@ -646,7 +782,10 @@ function gerarsenhaedit() {
   updateInput(newPass)
 }
 var Password = {
+
   _pattern: /[a-zA-Z0-9_\-\+\.]/,
+
+
   _getRandomByte: function () {
     // http://caniuse.com/#feat=getrandomvalues
     if (window.crypto && window.crypto.getRandomValues) {
@@ -688,7 +827,9 @@ var Password = {
       }, this)
       .join('');
   }
+
 };
+
 function updateInput(ish){
   var sizeOfCharacterSet=0;
   if (ish.match(/[a-z]+/)){
@@ -757,7 +898,12 @@ function translate(){
     document.getElementById("usersmenu2").innerHTML = gettranslate("usersmenu2");
     document.getElementById("estatisticasmenu2").innerHTML = gettranslate("estatisticasmenu2");
     document.getElementById("pixmenu").innerHTML = gettranslate("pixmenu");
+
+
+    
     document.getElementById("edittitle").innerHTML = gettranslate("edit");
+    
+    
     document.getElementById("editModalLabel").innerHTML = gettranslate("edit_password");
     document.getElementById("nomeeditlabel").innerHTML = gettranslate("name");
     document.getElementById("senhaeditlabel").innerHTML = gettranslate("password");

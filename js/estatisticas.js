@@ -37,18 +37,13 @@ window.onload = function () {
 };
 function getStatistics() {
   todasSenhas = [];
-  var token = getCookie("tokenis");
-  if (token == null || token == "") {
-    window.location = 'login.html';
-  }
   loadinglabel.innerHTML = gettranslate("search_statistics")+"...";
   var xhr = new XMLHttpRequest();
-  var url = host+"/iSenhasBuscarEstatisticasV4";
-  if(development) url = host+"/iSenhasBuscarEstatisticasV4DEV";
+  var url = host+"/iSenhasBuscarEstatisticasV5";
+  if(development) url = host+"/iSenhasBuscarEstatisticasV5DEV";
   xhr.open("GET", url, true);
   xhr.setRequestHeader("Content-Type", "application/json");
-  xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
-  xhr.setRequestHeader('authorization', token);
+  xhr.withCredentials = true; 
 
   xhr.onreadystatechange =  function () {
     if (xhr.readyState === 4 && xhr.status === 200) {
@@ -174,11 +169,26 @@ function notas(){
   window.location = "notas.html";
 }
 async function sair() {
-  document.cookie = "tokenis=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  loading.style.display = "block";
+  limiter.style.display = "none";
+  loadinglabel.innerHTML = gettranslate("leaving") + "...";
   document.cookie = "permission=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
   document.cookie = "recovery=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
   await deleteKey();
-  window.location = 'login.html';
+  var xhr = new XMLHttpRequest();
+  var url = host + "/iSenhasLogoutV5";
+  if (development) url = host + "/iSenhasLogoutV5DEV";
+  xhr.open("POST", url, true);
+  xhr.setRequestHeader("Content-Type", "application/json");
+  xhr.withCredentials = true;
+
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState === 4 ) {
+      window.location = 'login.html';
+    } 
+  };
+
+  xhr.send();
 }
 function pix(){
   window.location = "pix.html";
@@ -195,17 +205,71 @@ function reloadTable(){
     title.innerHTML = gettranslate("users")+" ("+todasSenhas.length+"/"+company_user.subscriptions+")"
     for(var i=0;i<todasSenhas.length;i++){
         var user = todasSenhas[i];
-        $('#table-body').append(`
-                <tr class="rows" id='${i+1}'>            
-                  <td class= "info" id="email" onclick="select(${i+1})">${user.email}</td>
-                  <td class= "info" id="permission" onclick="select(${i+1})">${user.permission}</td>
-                  <td class= "info" style="text-align:left;">
-                    <i class="far fa-edit" onClick= "edit(${i+1})"></i>
-                  </td>
-                  <td class= "info" id="recordName" onclick="select(${i+1})" style="display: none;">${user.recordName}</td>
-                  <td class= "info" id="recordChangeTag" onclick="select(${i+1})" style="display: none;">${user.recordChangeTag}</td>
-                </tr>
-            `)
+        const tr = $("<tr>", {
+            class: "rows",
+            id: i + 1
+        });
+
+        const tdEmail = $("<td>", {
+            class: "info",
+            id: "email"
+        })
+        .text(user.email)
+        .on("click", function () {
+            select(i + 1);
+        });
+
+        const tdPermission = $("<td>", {
+            class: "info",
+            id: "permission"
+        })
+        .text(user.permission)
+        .on("click", function () {
+            select(i + 1);
+        });
+
+        const tdEdit = $("<td>", {
+            class: "info"
+        })
+        .css("text-align", "left");
+
+        $("<i>", {
+            class: "far fa-edit"
+        })
+        .on("click", function () {
+            edit(i + 1);
+        })
+        .appendTo(tdEdit);
+
+        const tdRecordName = $("<td>", {
+            class: "info",
+            id: "recordName"
+        })
+        .css("display", "none")
+        .text(user.recordName)
+        .on("click", function () {
+            select(i + 1);
+        });
+
+        const tdRecordChangeTag = $("<td>", {
+            class: "info",
+            id: "recordChangeTag"
+        })
+        .css("display", "none")
+        .text(user.recordChangeTag)
+        .on("click", function () {
+            select(i + 1);
+        });
+
+        tr.append(
+            tdEmail,
+            tdPermission,
+            tdEdit,
+            tdRecordName,
+            tdRecordChangeTag
+        );
+
+        $("#table-body").append(tr);
     }
     loading.style.display = "none";
     limiter.style.display = "block";

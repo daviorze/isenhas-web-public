@@ -27,17 +27,12 @@ function getCookie(cname) {
 function authenticate(){
     loading.style.display = "block";
     loginform.style.display = "none";
-    var token = getCookie("tokenis");
-    if (token == null || token == "") {
-        window.location = 'login.html';
-    }
     var xhr = new XMLHttpRequest();
-    var url = host+"/iSenhasLoginRecoveryV4";
-    if(development) url = host+"/iSenhasLoginRecoveryV4DEV";
+    var url = host+"/iSenhasLoginRecoveryV5";
+    if(development) url = host+"/iSenhasLoginRecoveryV5DEV";
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
-    xhr.setRequestHeader('authorization', token);
+    xhr.withCredentials = true; 
     xhr.onreadystatechange = async function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
           let input = document.getElementById("recovery_nomeedit");
@@ -46,7 +41,7 @@ function authenticate(){
           d.setTime(d.getTime() + (time*60*60*1000));
           let expires = "expires="+ d.toUTCString();
           let recoveryEncrypted = await encryptData(input.value.toUpperCase())
-          document.cookie = "recovery=" + recoveryEncrypted + ";" + expires + ";path=/;secure;SameSite=Strict";
+          document.cookie = "recovery=" + recoveryEncrypted + ";" + expires + ";path=/;"//secure;SameSite=Strict";
           window.location = 'senhas.html';
         } else if (xhr.readyState === 4 && xhr.status === 406) {
             spinner.style.display = "none";

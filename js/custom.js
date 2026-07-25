@@ -1,6 +1,10 @@
 $(window).on('load', function(){
 
 	"use strict";
+ 
+	/* ========================================================== */
+	/*   Translate                                                */
+	/* ========================================================== */
 
 	document.getElementById("home").innerHTML = gettranslate("home");
 	document.getElementById("about").innerHTML = gettranslate("about");
@@ -77,6 +81,7 @@ $(window).on('load', function(){
 	document.getElementById("plan1_arg3").innerHTML = "<i class=\"fa fa-check\" style=\"color: #0099fa;\"></i>"+gettranslate("plan1_arg3");
 	document.getElementById("plan1_arg4").innerHTML = "<i class=\"fa fa-check\" style=\"color: #0099fa;\"></i>"+gettranslate("plan1_arg4");
 	document.getElementById("plan1_arg5").innerHTML = "<i class=\"fa fa-check\" style=\"color: #0099fa;\"></i>"+gettranslate("plan1_arg5");
+	//document.getElementById("plan1_arg6").innerHTML = "<i class=\"fa fa-check\" style=\"color: #0099fa;\"></i>"+gettranslate("plan1_arg6");
 	document.getElementById("plan1_arg7").innerHTML = "<i class=\"fa fa-check\" style=\"color: #0099fa;\"></i>"+gettranslate("plan1_arg7");
 	document.getElementById("premium_price").innerHTML = gettranslate("premium_price");
 	document.getElementById("premium_month").innerHTML = gettranslate("plans_month");
@@ -84,6 +89,9 @@ $(window).on('load', function(){
 	document.getElementById("plan2_arg1").innerHTML = "<i class=\"fa fa-check\" style=\"color: #fff;\"></i>"+gettranslate("plan2_arg1");
 	document.getElementById("plan2_arg2").innerHTML = "<i class=\"fa fa-check\" style=\"color: #fff;\"></i>"+gettranslate("plan2_arg2");
 	document.getElementById("plan2_arg3").innerHTML = "<i class=\"fa fa-check\" style=\"color: #fff;\"></i>"+gettranslate("plan2_arg3");
+	//document.getElementById("plan2_arg4").innerHTML = "<i class=\"fa fa-check\" style=\"color: #fff;\"></i>"+gettranslate("plan2_arg4");
+	//document.getElementById("plan2_arg5").innerHTML = "<i class=\"fa fa-check\" style=\"color: #fff;\"></i>"+gettranslate("plan2_arg5");
+	//document.getElementById("plan2_arg6").innerHTML = "<i class=\"fa fa-check\" style=\"color: #fff;\"></i>"+gettranslate("plan2_arg6");
 	document.getElementById("plan2_arg7").innerHTML = "<i class=\"fa fa-check\" style=\"color: #fff;\"></i>"+gettranslate("plan2_arg7");
 	document.getElementById("plan2_arg8").innerHTML = "<i class=\"fa fa-check\" style=\"color: #fff;\"></i>"+gettranslate("plan2_arg8");
 	document.getElementById("plan2_arg9").innerHTML = "<i class=\"fa fa-check\" style=\"color: #fff;\"></i>"+gettranslate("plan2_arg9");
@@ -116,6 +124,7 @@ $(window).on('load', function(){
 	document.getElementById("img4").src = gettranslate("img4");
 	document.getElementById("img5").src = gettranslate("img5");
 	document.getElementById("img6").src = gettranslate("img6");
+	//document.getElementById("googlesafe").src = gettranslate("googlesafe");
 	document.getElementById("popularapps").src = gettranslate("popularapps");
 	document.getElementById("appswelove").src = gettranslate("appswelove");
 	document.getElementById("apple_ecamp").src = gettranslate("apple_ecamp");
@@ -125,6 +134,7 @@ $(window).on('load', function(){
 
 	document.getElementById("social").innerHTML = gettranslate("social");
 	document.getElementById("logo").innerHTML = gettranslate("isenhas");
+	//document.getElementById("title_name").innerHTML = gettranslate("isenhas_title");
 	document.getElementById("privacy").innerHTML = gettranslate("privacy");
 	document.getElementById("privacy").href = gettranslate("privacy-href");
 
@@ -142,10 +152,21 @@ $(window).on('load', function(){
 	document.getElementById("plan3_arg5").innerHTML = "<i class=\"fa fa-check\" style=\"color: #0099fa;\"></i>"+gettranslate("plan3_arg5");
 	document.getElementById("plan3_arg6").innerHTML = "<i class=\"fa fa-check\" style=\"color: #0099fa;\"></i>"+gettranslate("plan3_arg6");
 	document.getElementById("business_free").innerHTML = gettranslate("business_free");
+	var language =  navigator.language || navigator.userLanguage; 
+    if(!language.includes("pt")){
+		const englishLink = "/blog/can-hackers-see-my-passwords.html";
+		document.getElementById("new3_title").href = englishLink;
+		document.getElementById("new3_sub1").href = englishLink;
+		document.getElementById("new3_sub2").href = englishLink;
+		document.getElementById("new3_button").href = englishLink;
+		document.getElementById("new3_image").href = englishLink;
 
+	}
 
 	
-
+	/* ========================================================== */
+	/*   Owl Carousel                                             */
+	/* ========================================================== */
 	
 	$('#owl1').owlCarousel({
 	    loop:true,
@@ -188,7 +209,9 @@ $(window).on('load', function(){
 	    }
 	})
  
-
+	/* ========================================================== */
+	/*   Navigation Background Color                              */
+	/* ========================================================== */
 	
 	$(window).on('scroll', function() {
 		if($(this).scrollTop() > 450) {
@@ -199,13 +222,27 @@ $(window).on('load', function(){
 	});
  
 	
+	/* ========================================================== */
+	/*   Hide Responsive Navigation On-Click                      */
+	/* ========================================================== */
+	
 	  $(".navbar-nav li a").on('click', function(event) {
 	    $(".navbar-collapse").collapse('hide');
 	  });
+
+	
+	/* ========================================================== */
+	/*   Navigation Color                                         */
+	/* ========================================================== */
 	
 	$('#navbar-collapse-02').onePageNav({
 		filter: ':not(.external)'
 	});
+
+
+	/* ========================================================== */
+	/*   SmoothScroll                                             */
+	/* ========================================================== */
 	
 	$(".nav li a, a.scrool, .baixar").on('click', function(e) {
 		
@@ -224,6 +261,11 @@ $(window).on('load', function(){
 			return false;
 		
 	});
+
+
+	/* ========================================================== */
+	/*   Newsletter                                               */
+	/* ========================================================== */
 	
 	$('.newsletter_box .newsletter_form').each( function(){
 		var form = $(this);
@@ -241,6 +283,11 @@ $(window).on('load', function(){
 			}
 		});
 	});	
+	
+
+	/* ========================================================== */
+	/*   Register                                                 */
+	/* ========================================================== */
 	
 	$('#register-form').each( function(){
 		var form = $(this);
@@ -261,6 +308,11 @@ $(window).on('load', function(){
 			}
 		});
 	})
+	
+	
+	/* ========================================================== */
+	/*   Contact                                                  */
+	/* ========================================================== */
 	$('#contact-form').each( function(){
 		var form = $(this);
 		//form.validate();
@@ -284,6 +336,11 @@ $(window).on('load', function(){
 
 	
 });
+
+
+	/* ========================================================== */
+	/*   Popup-Gallery                                            */
+	/* ========================================================== */
 	$('.popup-gallery').find('a.popup1').magnificPopup({
 		type: 'image',
 		gallery: {

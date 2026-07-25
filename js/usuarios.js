@@ -35,18 +35,13 @@ function estatisticas(){
 }
 function getCompany() {
   todasSenhas = [];
-  var token = getCookie("tokenis");
-  if (token == null || token == "") {
-    window.location = 'login.html';
-  }
   loadinglabel.innerHTML = gettranslate("search_users")+"...";
   var xhr = new XMLHttpRequest();
-  var url = host+"/iSenhasBuscarEmpresaV4";
-  if(development) url = host+"/iSenhasBuscarEmpresaV4DEV";
+  var url = host+"/iSenhasBuscarEmpresaV5";
+  if(development) url = host+"/iSenhasBuscarEmpresaV5DEV";
   xhr.open("GET", url, true);
   xhr.setRequestHeader("Content-Type", "application/json");
-  xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
-  xhr.setRequestHeader('authorization', token);
+  xhr.withCredentials = true; 
 
   xhr.onreadystatechange =  function () {
     if (xhr.readyState === 4 && xhr.status === 200) {
@@ -74,18 +69,13 @@ function getCompany() {
 }
 function getUsers() {
   todasSenhas = [];
-  var token = getCookie("tokenis");
-  if (token == null || token == "") {
-    window.location = 'login.html';
-  }
   loadinglabel.innerHTML = gettranslate("search_users")+"...";
   var xhr = new XMLHttpRequest();
-  var url = host+"/iSenhasBuscarUsuariosV4";
-  if(development) url = host+"/iSenhasBuscarUsuariosV4DEV";
+  var url = host+"/iSenhasBuscarUsuariosV5";
+  if(development) url = host+"/iSenhasBuscarUsuariosV5DEV";
   xhr.open("POST", url, true);
   xhr.setRequestHeader("Content-Type", "application/json");
-  xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
-  xhr.setRequestHeader('authorization', token);
+  xhr.withCredentials = true; 
 
   xhr.onreadystatechange =  function () {
     if (xhr.readyState === 4 && xhr.status === 200) {
@@ -133,11 +123,26 @@ function notas(){
   window.location = "notas.html";
 }
 async function sair() {
-  document.cookie = "tokenis=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  loading.style.display = "block";
+  limiter.style.display = "none";
+  loadinglabel.innerHTML = gettranslate("leaving") + "...";
   document.cookie = "permission=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
   document.cookie = "recovery=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
   await deleteKey();
-  window.location = 'login.html';
+  var xhr = new XMLHttpRequest();
+  var url = host + "/iSenhasLogoutV5";
+  if (development) url = host + "/iSenhasLogoutV5DEV";
+  xhr.open("POST", url, true);
+  xhr.setRequestHeader("Content-Type", "application/json");
+  xhr.withCredentials = true;
+
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState === 4 ) {
+      window.location = 'login.html';
+    } 
+  };
+
+  xhr.send();
 }
 function users() {
   window.location = 'usuarios.html';
@@ -146,19 +151,70 @@ function reloadTable(){
     $('#table-body').empty();
     selectedRows = [];
     title.innerHTML = gettranslate("users")+" ("+todasSenhas.length+"/"+company_user.subscriptions+")"
-    for(var i=0;i<todasSenhas.length;i++){
+    for(let i=0;i<todasSenhas.length;i++){
         var user = todasSenhas[i];
-        $('#table-body').append(`
-                <tr class="rows" id='${i+1}'>            
-                  <td class= "info" id="email" onclick="select(${i+1})">${user.email}</td>
-                  <td class= "info" id="permission" onclick="select(${i+1})">${user.permission}</td>
-                  <td class= "info" style="text-align:left;">
-                    <i class="far fa-edit" onClick= "edit(${i+1})"></i>
-                  </td>
-                  <td class= "info" id="recordName" onclick="select(${i+1})" style="display: none;">${user.recordName}</td>
-                  <td class= "info" id="recordChangeTag" onclick="select(${i+1})" style="display: none;">${user.recordChangeTag}</td>
-                </tr>
-            `)
+        const tr = $("<tr>", {
+            class: "rows",
+            id: i + 1
+        });
+
+        $("<td>", {
+            class: "info",
+            id: "email"
+        })
+        .text(user.email)
+        .on("click", function () {
+            select(i + 1);
+        })
+        .appendTo(tr);
+
+        $("<td>", {
+            class: "info",
+            id: "permission"
+        })
+        .text(user.permission)
+        .on("click", function () {
+            select(i + 1);
+        })
+        .appendTo(tr);
+
+        const tdEdit = $("<td>", {
+            class: "info"
+        }).css("text-align", "left");
+
+        $("<i>", {
+            class: "far fa-edit"
+        })
+        .on("click", function () {
+            edit(i + 1);
+        })
+        .appendTo(tdEdit);
+
+        tdEdit.appendTo(tr);
+
+        $("<td>", {
+            class: "info",
+            id: "recordName"
+        })
+        .css("display", "none")
+        .text(user.recordName)
+        .on("click", function () {
+            select(i + 1);
+        })
+        .appendTo(tr);
+
+        $("<td>", {
+            class: "info",
+            id: "recordChangeTag"
+        })
+        .css("display", "none")
+        .text(user.recordChangeTag)
+        .on("click", function () {
+            select(i + 1);
+        })
+        .appendTo(tr);
+
+        $("#table-body").append(tr);
     }
     loading.style.display = "none";
     limiter.style.display = "block";
@@ -242,18 +298,13 @@ function buttonadicionar(){
   addSenha();
 }
 function addSenha() {
-  var token = getCookie("tokenis");
-  if (token == null || token == "") {
-    window.location = 'login.html';
-  }
   loadinglabel.innerHTML = gettranslate("add_user")+"...";
   var xhr = new XMLHttpRequest();
-  var url = host+"/iSenhasAddUsuariosV4";
-  if(development) url = host+"/iSenhasAddUsuariosV4DEV";
+  var url = host+"/iSenhasAddUsuariosV5";
+  if(development) url = host+"/iSenhasAddUsuariosV5DEV";
   xhr.open("POST", url, true);
   xhr.setRequestHeader("Content-Type", "application/json");
-  xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
-  xhr.setRequestHeader('authorization', token);
+  xhr.withCredentials = true; 
 
   xhr.onreadystatechange = function () {
     if (xhr.readyState === 4 && xhr.status === 200) {
@@ -322,18 +373,13 @@ function buttonremove(){
   excluirSenhas();
 }
 function excluirSenhas() {
-  var token = getCookie("tokenis");
-  if (token == null || token == "") {
-    window.location = 'login.html';
-  }
   loadinglabel.innerHTML = gettranslate("remove_user")+"...";
   var xhr = new XMLHttpRequest();
-  var url = host+"/iSenhasExcluirUsuariosV4";
-  if(development) url = host+"/iSenhasExcluirUsuariosV4DEV";
+  var url = host+"/iSenhasExcluirUsuariosV5";
+  if(development) url = host+"/iSenhasExcluirUsuariosV5DEV";
   xhr.open("POST", url, true);
   xhr.setRequestHeader("Content-Type", "application/json");
-  xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
-  xhr.setRequestHeader('authorization', token);
+  xhr.withCredentials = true; 
 
   xhr.onreadystatechange = function () {
     if (xhr.readyState === 4 && xhr.status === 200) {
@@ -374,8 +420,11 @@ function edit(id){
   var modal = $("#editarModal")
     modal.find('#emailedit').val(todasSenhas[id-1].email)
     console.log(todasSenhas[id-1].permission)
+    //document.getElementById("permissionedit").value = todasSenhas[id-1].permission;
     $('select[name=permissionedit]').val(todasSenhas[id-1].permission);
     $('#permissionedit').selectpicker('refresh')
+    //modal.find('#permissionedit').val(todasSenhas[id-1].permission)
+    //updateInput(window.atob(todasSenhas[id-1].fields.password.value))
     editSelected = id;
   $("#editarModal").modal();
 }
@@ -390,18 +439,14 @@ function buttoneditar(){
   editSenha();
 }
 function editSenha() {
-  var token = getCookie("tokenis");
-  if (token == null || token == "") {
-    window.location = 'login.html';
-  }
   loadinglabel.innerHTML = gettranslate("update_user")+"...";
   var xhr = new XMLHttpRequest();
-  var url = host+"/iSenhasAtualizarUsuarioV4";
-  if(development) url = host+"/iSenhasAtualizarUsuarioV4DEV";
+  var url = host+"/iSenhasAtualizarUsuarioV5";
+  if(development) url = host+"/iSenhasAtualizarUsuarioV5DEV";
   xhr.open("POST", url, true);
   xhr.setRequestHeader("Content-Type", "application/json");
-  xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
-  xhr.setRequestHeader('authorization', token);
+  xhr.withCredentials = true; 
+
 
   xhr.onreadystatechange = function () {
     if (xhr.readyState === 4 && xhr.status === 200) {
@@ -542,6 +587,9 @@ function translate(){
     document.getElementById("loadinglabel").innerHTML = gettranslate("search_users")+"...";
     document.getElementById("nametitle").innerHTML = gettranslate("email");
     document.getElementById("observationtitle").innerHTML = gettranslate("permission");
+    //document.getElementById("passwordtitle").innerHTML = "Password";
+    //.getElementById("showtitle").innerHTML = "Show";
+    //document.getElementById("copytitle").innerHTML = "Copy";
     document.getElementById("docsmenu").innerHTML = gettranslate("docsmenu");
     document.getElementById("search").placeholder = gettranslate("search_user");
     document.getElementById("page").placeholder = gettranslate("login_title");
@@ -555,8 +603,10 @@ function translate(){
     document.getElementById("addModalLabel").innerHTML = gettranslate("new_user");
     document.getElementById("emailaddlabel").innerHTML = gettranslate("email")
     document.getElementById("permissionaddlabel").innerHTML = gettranslate("permission")
+    //document.getElementById("usuarioaddlabel").innerHTML = "Username";
     document.getElementById("emailadd").placeholder = gettranslate("ex_username");
     document.getElementById("permissionadd").placeholder = gettranslate("ex_permission");
+    //document.getElementById("usuarioadd").placeholder = "Ex.: username@email.com";
     document.getElementById("canceladd").innerHTML = gettranslate("cancelbutton");
     document.getElementById("addadd").innerHTML = gettranslate("buttonadd");
     document.getElementById("excluirModalLabel").innerHTML = gettranslate("remove_users");
@@ -566,7 +616,9 @@ function translate(){
     document.getElementById("editModalLabel").innerHTML = gettranslate("edit_user");
     document.getElementById("emaileditlabel").innerHTML = gettranslate("email")
     document.getElementById("permissioneditlabel").innerHTML = gettranslate("permission");
+    //document.getElementById("usuarioeditlabel").innerHTML = "Username";
     document.getElementById("emailedit").placeholder = gettranslate("ex_username");
+    //document.getElementById("senhaedit").placeholder = "Ex.: fea8hjaejJ(U";
     document.getElementById("permissionedit").placeholder = gettranslate("ex_permission");
     document.getElementById("canceledit").innerHTML = gettranslate("cancelbutton");
     document.getElementById("saveedit").innerHTML = gettranslate("savebutton");

@@ -52,18 +52,13 @@ async function encryptExtreme(value){
 }
 async function getPasswords() {
   todasSenhas = [];
-  var token = getCookie("tokenis");
-  if (token == null || token == "") {
-    window.location = 'login.html';
-  }
   loadinglabel.innerHTML = gettranslate("search_pix")+"...";
   var xhr = new XMLHttpRequest();
-  var url = host+"/iSenhasBuscarPixV4";
-  if(development) url = host+"/iSenhasBuscarPixV4DEV";
+  var url = host+"/iSenhasBuscarPixV5";
+  if(development) url = host+"/iSenhasBuscarPixV5DEV";
   xhr.open("POST", url, true);
   xhr.setRequestHeader("Content-Type", "application/json");
-  xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
-  xhr.setRequestHeader('authorization', token);
+  xhr.withCredentials = true; 
 
   xhr.onreadystatechange = async function () {
     if (xhr.readyState === 4 && xhr.status === 200) {
@@ -130,19 +125,13 @@ async function getPasswords() {
   xhr.send();
 }
 function getUsers() {
-  todosUsuarios = [];
-  var token = getCookie("tokenis");
-  if (token == null || token == "") {
-    window.location = 'login.html';
-  }
   loadinglabel.innerHTML = gettranslate("search_users")+"...";
   var xhr = new XMLHttpRequest();
-  var url = host+"/iSenhasBuscarUsuariosV4";
-  if(development) url = host+"/iSenhasBuscarUsuariosV4DEV";
+  var url = host+"/iSenhasBuscarUsuariosV5";
+  if(development) url = host+"/iSenhasBuscarUsuariosV5DEV";
   xhr.open("POST", url, true);
   xhr.setRequestHeader("Content-Type", "application/json");
-  xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
-  xhr.setRequestHeader('authorization', token);
+  xhr.withCredentials = true; 
 
   xhr.onreadystatechange =  function () {
     if (xhr.readyState === 4 && xhr.status === 200) {
@@ -167,19 +156,13 @@ function getUsers() {
   xhr.send();
 }
 function getVaults() {
-  vaults = [];
-  var token = getCookie("tokenis");
-  if (token == null || token == "") {
-    window.location = 'login.html';
-  }
   loadinglabel.innerHTML = gettranslate("search_vaults") + "...";
   var xhr = new XMLHttpRequest();
-  var url = host + "/iSenhasBuscarCofresV4";
-  if (development) url = host + "/iSenhasBuscarCofresV4DEV";
+  var url = host + "/iSenhasBuscarCofresV5";
+  if (development) url = host + "/iSenhasBuscarCofresV5DEV";
   xhr.open("POST", url, true);
   xhr.setRequestHeader("Content-Type", "application/json");
-  xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
-  xhr.setRequestHeader('Authorization', token);
+  xhr.withCredentials = true; 
 
   xhr.onreadystatechange = function () {
     if (xhr.readyState === 4 && xhr.status === 200) {
@@ -219,18 +202,13 @@ function getVaults() {
   xhr.send();
 }
 function getShared() {
-  var token = getCookie("tokenis");
-  if (token == null || token == "") {
-    window.location = 'login.html';
-  }
   loadinglabel.innerHTML = gettranslate("search_passwords")+"...";
   var xhr = new XMLHttpRequest();
-  var url = host+"/iSenhasBuscarCofresCompartilhadoV4";
-  if(development) url = host+"/iSenhasBuscarCofresCompartilhadoV4DEV";
+  var url = host+"/iSenhasBuscarCofresCompartilhadoV5";
+  if(development) url = host+"/iSenhasBuscarCofresCompartilhadoV5DEV";
   xhr.open("POST", url, true);
   xhr.setRequestHeader("Content-Type", "application/json");
-  xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
-  xhr.setRequestHeader('authorization', token);
+  xhr.withCredentials = true; 
 
   xhr.onreadystatechange =  function () {
     if (xhr.readyState === 4 && xhr.status === 200) {
@@ -285,11 +263,26 @@ function notas(){
   window.location = "notas.html";
 }
 async function sair() {
-  document.cookie = "tokenis=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  loading.style.display = "block";
+  limiter.style.display = "none";
+  loadinglabel.innerHTML = gettranslate("leaving") + "...";
   document.cookie = "permission=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
   document.cookie = "recovery=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
   await deleteKey();
-  window.location = 'login.html';
+  var xhr = new XMLHttpRequest();
+  var url = host + "/iSenhasLogoutV5";
+  if (development) url = host + "/iSenhasLogoutV5DEV";
+  xhr.open("POST", url, true);
+  xhr.setRequestHeader("Content-Type", "application/json");
+  xhr.withCredentials = true;
+
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState === 4 ) {
+      window.location = 'login.html';
+    } 
+  };
+
+  xhr.send();
 }
 function users() {
   window.location = 'usuarios.html';
@@ -326,7 +319,172 @@ function removeAll(selectBox) {
       selectBox.remove(0);
   }
 }  
-function reloadTable(){
+function createPasswordRow(password, index, options = {}) {
+
+    const {
+        image,
+        named,
+        observation,
+        pass,
+        display_star,
+        secondaryId = "passvault",
+        secondaryText = "",
+        secondaryStyle = {},
+        premium
+    } = options;
+
+    const row = $("<tr>", {
+        class: "rows",
+        id: index
+    });
+
+    // Nome
+    const tdName = $("<td>", {
+        class: "info",
+        id: "name" + index
+    });
+
+    const flex = $("<div>").css("display", "flex");
+
+    flex.append(
+        $("<img>", {
+            src: "../images/iconsmart/star.png",
+            alt: ""
+        }).css({
+            display: display_star,
+            position: "absolute",
+            zIndex: 1000,
+            height: "14px",
+            marginRight: "10px"
+        }),
+
+        $("<img>", {
+            src: "../images/iconsmart/" + image + ".png",
+            alt: ""
+        }).css({
+            height: "24px",
+            marginRight: "10px"
+        }).on("click", e => {
+            e.stopPropagation();
+            copy(index);
+        }),
+
+        $("<div>")
+            .append($("<div>").text(named))
+            .append(
+                $("<div>", {
+                    id: secondaryId + index
+                })
+                .css(secondaryStyle)
+                .text(secondaryText)
+            )
+    );
+
+    tdName.append(flex);
+
+    // Observação
+    const tdObservation = $("<td>", {
+        class: "info"
+    }).text(observation)
+      .on("click", () => select(index));
+
+    // Senha
+    const tdPassword = $("<td>", {
+        class: "info"
+    }).on("click", () => select(index));
+
+    tdPassword.append(
+        $("<input>", {
+            class: "passwordRow",
+            type: "password",
+            readonly: true
+        }).val(pass)
+    );
+
+    /*// Descrição
+    const tdDescription = $("<td>", {
+        class: "info"
+    }).on("click", () => select(index));
+
+    tdDescription.append(
+        $("<textarea>", {
+            rows: 1,
+            class: "passwordRow",
+            readonly: true
+        }).val(description)
+    );*/
+
+    // Olho
+
+    const tdEye = $("<td>").append(
+        $("<i>", {
+            class: "far fa-eye-slash"
+        }).on("click", e => {
+            e.stopPropagation();
+            showHide(index);
+        })
+    );
+
+    // Copiar
+
+    const tdCopy = $("<td>");
+
+    tdCopy.append(
+
+        $("<i>", {
+            class: "far fa-copy"
+        }).on("click", () => copy(index)),
+    );
+
+    // Editar
+
+    const tdEdit = $("<td>").append(
+
+        $("<i>", {
+            class: "far fa-edit"
+        }).on("click", () => edit(index))
+    );
+
+    // Hidden
+
+    const tdRecord = $("<td>")
+        .hide()
+        .text(password.recordName);
+
+    const tdTag = $("<td>")
+        .hide()
+        .text(password.recordChangeTag);
+
+    // Share
+
+    const tdShare = $("<td>").append(
+
+        $("<i>", {
+            class: "fa fa-share"
+        }).on("click", () => {
+          if (premium) {
+              sharepremium(index);
+          } else {
+              share(index);
+          }
+        })
+    );
+
+    row.append(
+        tdName,
+        tdObservation,
+        tdPassword,
+        tdEye,
+        tdCopy,
+        tdEdit,
+        tdRecord,
+        tdTag,
+        tdShare
+    );
+
+    return row;
+}     
+async function reloadTable(){
     $('#table-body').empty();
     selectedRows = [];
     document.getElementById("title").innerHTML =gettranslate("pixs") +" ("+todasSenhas.length+") ";
@@ -380,72 +538,45 @@ function reloadTable(){
           display = "block"
         }
         if(!password.fields.admin && !password.sharedDesc){        
-          $('#table-body').append(`
-                  <tr class="rows" id='${i+1}'>            
-                 <td class= "info" id="name${i + 1}">
-                    <div style="display: flex;">   
-                      <img style="display:${display_star};position:absolute;z-index: 1000;height:14px;margin-right:10px;" alt="Qries" src="../images/iconsmart/star.png" data-toggle="modal" data-target="#exampleModal" data-whatever="@fat"/>
-                      <img style="height:24px;margin-right:10px;" alt="Qries" src="../images/iconsmart/${image}.png" data-toggle="modal" data-target="#exampleModal" data-whatever="@fat" onClick= "copy(${i + 1})"/>
-                    <div>
-                    <div>${named}</div>
-                      <div id="passvault${i + 1}" style="font-size:10px;margin-top:5px;display:${display}">${vaultName}</div>
-                    </div>
-                     </div>
-                    </td>
-                  <td class= "info" id="observation" onclick="select(${i+1})">${observation}</td>
-                  <td class= "info" id="pass" onclick="select(${i+1})"><input id="password" class="passwordRow" type="password" value="${pass}" readonly/></td>
-                  <td class= "info" style="text-align:left;">
-                      <i class="far fa-eye-slash" onClick= "showHide(${i+1})"></i>
-                  </td> 
-                  <td class= "info" style="text-align:left;"> 
-                  <i class="far fa-copy" onClick= "copy(${i+1})"></i>
-                  </td>
-                  <td class= "info" style="text-align:left;">
-                  <i class="far fa-edit" onClick= "edit(${i+1})"></i>
-                  </td>
-                  <td class= "info" id="recordName" onclick="select(${i+1})" style="display: none;">${password.recordName}</td>
-                  <td class= "info" id="recordChangeTag" onclick="select(${i+1})" style="display: none;">${password.recordChangeTag}</td>
-                  <td class= "info" style="text-align:left;">
-                  <i class="fa fa-share" onClick= "share(${i+1})"></i>
-                  </td>
-                  </tr>
-              `)
-          } else {
+          $("#table-body").append(
+              createPasswordRow(password, i + 1, {
+                  image,
+                  named,
+                  observation,
+                  pass,
+                  display_star,
+                  secondaryId: "passvault",
+                  secondaryText: vaultName,
+                  secondaryStyle: {
+                      fontSize: "10px",
+                      marginTop: "5px",
+                      display
+                  },
+                  premium: false
+              })
+          );
+        } else {
             var subtitle = "" 
             if(password.fields.admin != null)
               subtitle = gettranslate("shared_by")+" "+password.fields.admin.value
             else
               subtitle = password.sharedDesc
-            $('#table-body').append(`
-            <tr class="rows" id='${i+1}'>     
-                  
-              <td class= "info" id="name" onclick="select(${i+1})">
-                <div style="display: flex;">   
-                  <img style="height:24px;margin-right:10px;" alt="Qries" src="../images/iconsmart/${image}.png" data-toggle="modal" data-target="#exampleModal" data-whatever="@fat" onClick= "copy(${i+1})"/>
-                  <div>
-                  <div>${named}</div>
-                  <div id="passdesc${i+1}" style="font-size:12px;">${subtitle}</div>
-                  </div>
-                </div>
-              </td>
-              <td class= "info" id="observation" onclick="select(${i+1})">${observation}</td>
-              <td class= "info" id="pass" onclick="select(${i+1})"><input id="password" class="passwordRow" type="password" value="${pass}" readonly/></td>
-            <td class= "info" style="text-align:left;">
-                <i class="far fa-eye-slash" onClick= "showHide(${i+1})"></i>
-            </td> 
-            <td class= "info" style="text-align:left;"> 
-            <i class="far fa-copy" onClick= "copy(${i+1})"></i>
-            </td>
-            <td class= "info" style="text-align:left;">
-            <i class="far fa-edit" onClick= "edit(${i+1})"></i>
-            </td>
-            <td class= "info" id="recordName" onclick="select(${i+1})" style="display: none;">${password.recordName}</td>
-            <td class= "info" id="recordChangeTag" onclick="select(${i+1})" style="display: none;">${password.recordChangeTag}</td>
-            <td class= "info" style="text-align:left;">
-            <i class="fa fa-share" onClick= "share(${i+1})"></i>
-            </td>
-            </tr>
-        `)
+            $("#table-body").append(
+              createPasswordRow(password, i + 1, {
+                  image,
+                  named,
+                  observation,
+                  pass,
+                  display_star,
+                  secondaryId: "passvault",
+                  secondaryText: subtitle,
+                  secondaryStyle: {
+                      fontSize: "10px",
+                      marginTop: "5px"
+                  },
+                  premium: false
+              })
+            );     
           }
       }
     } else {
@@ -478,72 +609,45 @@ function reloadTable(){
           display = "block"
         }
         if(!password.fields.admin && !password.sharedDesc){        
-          $('#table-body').append(`
-                  <tr class="rows" id='${i+1}'>            
-                  <td class= "info" id="name${i + 1}">
-                    <div style="display: flex;">   
-                      <img style="display:${display_star};position:absolute;z-index: 1000;height:14px;margin-right:10px;" alt="Qries" src="../images/iconsmart/star.png" data-toggle="modal" data-target="#exampleModal" data-whatever="@fat"/>
-                      <img style="height:24px;margin-right:10px;" alt="Qries" src="../images/iconsmart/${image}.png" data-toggle="modal" data-target="#exampleModal" data-whatever="@fat" onClick= "copy(${i + 1})"/>
-                    <div>
-                    <div>${named}</div>
-                      <div id="passvault${i + 1}" style="font-size:10px;margin-top:5px;display:${display}">${vaultName}</div>
-                    </div>
-                     </div>
-                    </td>
-                    <td class= "info" id="observation" onclick="select(${i+1})">${observation}</td>
-                    <td class= "info" id="pass" onclick="select(${i+1})"><input id="password" class="passwordRow" type="password" value="${pass}" readonly/></td>
-                  <td class= "info" style="text-align:left;">
-                      <i class="far fa-eye-slash" onClick= "showHide(${i+1})"></i>
-                  </td> 
-                  <td class= "info" style="text-align:left;"> 
-                  <i class="far fa-copy" onClick= "copy(${i+1})"></i>
-                  </td>
-                  <td class= "info" style="text-align:left;">
-                  <i class="far fa-edit" onClick= "edit(${i+1})"></i>
-                  </td>
-                  <td class= "info" id="recordName" onclick="select(${i+1})" style="display: none;">${password.recordName}</td>
-                  <td class= "info" id="recordChangeTag" onclick="select(${i+1})" style="display: none;">${password.recordChangeTag}</td>
-                  <td class= "info" style="text-align:left;">
-                  <i class="fa fa-share" onClick= "sharepremium(${i+1})"></i>
-                  </td>
-                  </tr>
-              `)
-          } else {
+          $("#table-body").append(
+              createPasswordRow(password, i + 1, {
+                  image,
+                  named,
+                  observation,
+                  pass,
+                  display_star,
+                  secondaryId: "passvault",
+                  secondaryText: vaultName,
+                  secondaryStyle: {
+                      fontSize: "10px",
+                      marginTop: "5px",
+                      display
+                  },
+                  premium: true
+              })
+          );   
+        } else {
             var subtitle = "" 
             if(password.fields.admin != null)
               subtitle = gettranslate("shared_by")+" "+password.fields.admin.value
             else
               subtitle = password.sharedDesc
-            $('#table-body').append(`
-            <tr class="rows" id='${i+1}'>     
-                  
-              <td class= "info" id="name" onclick="select(${i+1})">
-                <div style="display: flex;">   
-                  <img style="height:24px;margin-right:10px;" alt="Qries" src="../images/iconsmart/${image}.png" data-toggle="modal" data-target="#exampleModal" data-whatever="@fat" onClick= "copy(${i+1})"/>
-                  <div>
-                  <div>${named}</div>
-                  <div id="passdesc${i+1}" style="font-size:12px;">${subtitle}</div>
-                  </div>
-                </div>
-              </td>
-              <td class= "info" id="observation" onclick="select(${i+1})">${observation}</td>
-              <td class= "info" id="pass" onclick="select(${i+1})"><input id="password" class="passwordRow" type="password" value="${pass}" readonly/></td>
-            <td class= "info" style="text-align:left;">
-                <i class="far fa-eye-slash" onClick= "showHide(${i+1})"></i>
-            </td> 
-            <td class= "info" style="text-align:left;"> 
-            <i class="far fa-copy" onClick= "copy(${i+1})"></i>
-            </td>
-            <td class= "info" style="text-align:left;">
-            <i class="far fa-edit" onClick= "edit(${i+1})"></i>
-            </td>
-            <td class= "info" id="recordName" onclick="select(${i+1})" style="display: none;">${password.recordName}</td>
-            <td class= "info" id="recordChangeTag" onclick="select(${i+1})" style="display: none;">${password.recordChangeTag}</td>
-            <td class= "info" style="text-align:left;">
-            <i class="fa fa-share" onClick= "share(${i+1})"></i>
-            </td>
-            </tr>
-        `)
+            $("#table-body").append(
+              createPasswordRow(password, i + 1, {
+                  image,
+                  named,
+                  observation,
+                  pass,
+                  display_star,
+                  secondaryId: "passvault",
+                  secondaryText: subtitle,
+                  secondaryStyle: {
+                      fontSize: "10px",
+                      marginTop: "5px"
+                  },
+                  premium: true
+              })
+            );     
           }
       }
     }
@@ -654,18 +758,13 @@ function buttonadicionar(){
   addSenha();
 }
 async function addSenha() {
-  var token = getCookie("tokenis");
-  if (token == null || token == "") {
-    window.location = 'login.html';
-  }
   loadinglabel.innerHTML = gettranslate("add_pix")+"...";
   var xhr = new XMLHttpRequest();
-  var url = host+"/iSenhasAddPixV4";
-  if(development) url = host+"/iSenhasAddPixV4DEV";
+  var url = host+"/iSenhasAddPixV5";
+  if(development) url = host+"/iSenhasAddPixV5DEV";
   xhr.open("POST", url, true);
   xhr.setRequestHeader("Content-Type", "application/json");
-  xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
-  xhr.setRequestHeader('authorization', token);
+  xhr.withCredentials = true;
 
   xhr.onreadystatechange = function () {
     if (xhr.readyState === 4 && xhr.status === 200) {
@@ -724,16 +823,29 @@ function share(id){
     if(password.fields.shared){
       Array.prototype.push.apply(passwordPermissions, password.fields.shared.value);
       Array.prototype.push.apply(oldPermissions, password.fields.shared.value);
-      password.fields.shared.value.forEach(element =>{
-        $('#table-body-share').append(`
-                    <tr class="rows"id="row${i}" >            
-                      <td class= "info" id="email${i}" >${element}</td>
-                      <td class= "info"  style="text-align:left;" onClick= "userremove(${i})">
-                        <i class="fa fa-trash-o onClick= "userremove(${i})"></i>
-                      </td>
-                    </tr>
-                `)
-        i++;
+      password.fields.shared.value.forEach(element => {
+          const myIndex = i;
+          const tr = $("<tr>", {
+              class: "rows",
+              id: `row${myIndex}`
+          });
+          const tdEmail = $("<td>", {
+              class: "info",
+              id: `email${myIndex}`
+          }).text(element);
+          const tdDelete = $("<td>", {
+              class: "info"
+          }).css("text-align", "left");
+          const icon = $("<i>", {
+              class: "fa fa-trash-o",
+              click: function () {
+                  userremove(myIndex);
+              }
+          });
+          tdDelete.append(icon);
+          tr.append(tdEmail, tdDelete);
+          $("#table-body-share").append(tr);
+          i++;
       });
     }
     refreshOptions();
@@ -754,16 +866,35 @@ function sharepremium(id){
     if(password.fields.shared){
       Array.prototype.push.apply(passwordPermissions, password.fields.shared.value);
       Array.prototype.push.apply(oldPermissions, password.fields.shared.value);
-      password.fields.shared.value.forEach(element =>{
-        $('#table-body-share-premium').append(`
-                    <tr class="rows"id="rowpremium${i}" >            
-                      <td class= "info" id="emailpremium${i}" >${element}</td>
-                      <td class= "info"  style="text-align:left;" onClick= "userremovepremium(${i})">
-                        <i class="fa fa-trash-o onClick= "userremovepremium(${i})"></i>
-                      </td>
-                    </tr>
-                `)
-        i++;
+      password.fields.shared.value.forEach(element => {
+          const myIndex = i
+          const tr = $("<tr>", {
+              class: "rows",
+              id: `rowpremium${myIndex}`
+          });
+
+          const tdEmail = $("<td>", {
+              class: "info",
+              id: `emailpremium${myIndex}`
+          }).text(element);
+
+          const tdDelete = $("<td>", {
+              class: "info"
+          }).css("text-align", "left");
+
+          const icon = $("<i>", {
+              class: "fa fa-trash-o",
+              click: function () {
+                  userremovepremium(myIndex);
+              }
+          });
+
+          tdDelete.append(icon);
+          tr.append(tdEmail, tdDelete);
+
+          $("#table-body-share-premium").append(tr);
+
+          i++;
       });
     }
     document.getElementById("emailsharepremium").value = "";
@@ -809,16 +940,35 @@ function addshare(){
   refreshOptions();
   $('#table-body-share').empty();
     var i = 0;
-    passwordPermissions.forEach(element =>{
-      $('#table-body-share').append(`
-                  <tr class="rows" id="row${i}">            
-                    <td class= "info" id="email${i}" >${element}</td>
-                    <td class= "info"  style="text-align:left;" onClick= "userremove(${i})">
-                      <i class="fa fa-trash-o onClick= "userremove(${i})"></i>
-                    </td>
-                  </tr>
-              `)
-      i++;
+    passwordPermissions.forEach(element => {
+      const myIndex = i;
+        const tr = $("<tr>", {
+            class: "rows",
+            id: `row${myIndex}`
+        });
+
+        const tdEmail = $("<td>", {
+            class: "info",
+            id: `email${myIndex}`
+        }).text(element);
+
+        const tdDelete = $("<td>", {
+            class: "info"
+        }).css("text-align", "left");
+
+        const icon = $("<i>", {
+            class: "fa fa-trash-o",
+            click: function () {
+                userremove(myIndex);
+            }
+        });
+
+        tdDelete.append(icon);
+        tr.append(tdEmail, tdDelete);
+
+        $("#table-body-share").append(tr);
+
+        i++;
     });
 }
 function addsharepremium(){
@@ -827,21 +977,41 @@ function addsharepremium(){
   passwordPermissions.push(executor.value);
   $('#table-body-share-premium').empty();
     var i = 0;
-    passwordPermissions.forEach(element =>{
-      $('#table-body-share-premium').append(`
-                  <tr class="rows" id="rowpremium${i}">            
-                    <td class= "info" id="emailpremium${i}" >${element}</td>
-                    <td class= "info"  style="text-align:left;" onClick= "userremovepremium(${i})">
-                      <i class="fa fa-trash-o onClick= "userremovepremium(${i})"></i>
-                    </td>
-                  </tr>
-              `)
-      i++;
+    passwordPermissions.forEach(element => {
+
+        const index = i;
+
+        const tr = $("<tr>", {
+            class: "rows",
+            id: `rowpremium${index}`
+        });
+
+        const tdEmail = $("<td>", {
+            class: "info",
+            id: `emailpremium${index}`
+        }).text(element);
+
+        const tdDelete = $("<td>", {
+            class: "info"
+        }).css("text-align", "left");
+
+        const icon = $("<i>", {
+            class: "fa fa-trash-o"
+        }).on("click", function () {
+            userremovepremium(index);
+        });
+
+        tdDelete.append(icon);
+        tr.append(tdEmail, tdDelete);
+
+        $("#table-body-share-premium").append(tr);
+
+        i++;
     });
     document.getElementById("emailsharepremium").value = "";
 }
 function userremove(id){
-  var email = document.getElementById("email"+id).innerHTML;
+  var email = $("#email" + id).text();
   var password = todasSenhas[selectedUser-1];
   var filtered = passwordPermissions.filter(function(value, index, arr){ 
     return value != email;
@@ -852,7 +1022,7 @@ function userremove(id){
 
 }
 function userremovepremium(id){
-  var email = document.getElementById("emailpremium"+id).innerHTML;
+  var email = $("#emailpremium" + id).text();
   var password = todasSenhas[selectedUser-1];
   var filtered = passwordPermissions.filter(function(value, index, arr){ 
     return value != email;
@@ -876,18 +1046,13 @@ function buttonsharepremium(){
   atualizarSenha()
 }
 function atualizarSenha() {
-  var token = getCookie("tokenis");
-  if (token == null || token == "") {
-    window.location = 'login.html';
-  }
   loadinglabel.innerHTML = gettranslate("update_pix")+"...";
   var xhr = new XMLHttpRequest();
-  var url = host+"/iSenhasAtualizarV4";
-  if(development) url = host+"/iSenhasAtualizarV4DEV";
+  var url = host+"/iSenhasAtualizarV5";
+  if(development) url = host+"/iSenhasAtualizarV5DEV";
   xhr.open("POST", url, true);
   xhr.setRequestHeader("Content-Type", "application/json");
-  xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
-  xhr.setRequestHeader('authorization', token);
+  xhr.withCredentials = true;
 
   xhr.onreadystatechange = function () {
     if (xhr.readyState === 4 && xhr.status === 200) {
@@ -940,18 +1105,13 @@ function buttonremove(){
   excluirSenhas();
 }
 function excluirSenhas() {
-  var token = getCookie("tokenis");
-  if (token == null || token == "") {
-    window.location = 'login.html';
-  }
   loadinglabel.innerHTML = gettranslate("remove_pixs")+": "+enviado;
   var xhr = new XMLHttpRequest();
-  var url = host+"/iSenhasExcluirV4";
-  if(development) url = host+"/iSenhasExcluirV4DEV";
+  var url = host+"/iSenhasExcluirV5";
+  if(development) url = host+"/iSenhasExcluirV5DEV";
   xhr.open("POST", url, true);
   xhr.setRequestHeader("Content-Type", "application/json");
-  xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
-  xhr.setRequestHeader('authorization', token);
+  xhr.withCredentials = true;
 
   xhr.onreadystatechange = function () {
     if (xhr.readyState === 4 && xhr.status === 200) {
@@ -1083,18 +1243,13 @@ function buttoneditar(){
   editSenha();
 }
 async function editSenha() {
-  var token = getCookie("tokenis");
-  if (token == null || token == "") {
-    window.location = 'login.html';
-  }
   loadinglabel.innerHTML = gettranslate("update_pix")+"...";
   var xhr = new XMLHttpRequest();
-  var url = host+"/iSenhasAtualizarV4";
-  if(development) url = host+"/iSenhasAtualizarV4DEV";
+  var url = host+"/iSenhasAtualizarV5";
+  if(development) url = host+"/iSenhasAtualizarV5DEV";
   xhr.open("POST", url, true);
   xhr.setRequestHeader("Content-Type", "application/json");
-  xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
-  xhr.setRequestHeader('authorization', token);
+  xhr.withCredentials = true;
 
   xhr.onreadystatechange = function () {
     if (xhr.readyState === 4 && xhr.status === 200) {
