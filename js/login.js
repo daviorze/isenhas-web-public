@@ -3,7 +3,7 @@ var token = "";
 window.onload = function () {
     translate()
     loading.style.display = "none";
-    token = makeid(30);
+    token = makeid();
     const qrcode = document.getElementById("qrcode");
     const qrdiv = document.getElementById("qrdiv");
     var QR_CODE = new QRCode("qrcode", {
@@ -17,15 +17,13 @@ window.onload = function () {
     QR_CODE.makeCode(token);
     qrdiv.className = "qrdiv";
 };
-function makeid(length) {
-    var result = '';
-    var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    var charactersLength = characters.length;
-    for (var i = 0; i < length; i++) {
-        result += characters.charAt(Math.floor(Math.random() *
-            charactersLength));
-    }
-    return result;
+function makeid() {
+    const bytes = new Uint8Array(32);
+    crypto.getRandomValues(bytes);
+    return btoa(String.fromCharCode(...bytes))
+        .replace(/\+/g, "-")
+        .replace(/\//g, "_")
+        .replace(/=/g, "");
 }
 function login(){
     loading.style.display = "block";
@@ -50,9 +48,9 @@ function authenticate(count){
     xhr.onreadystatechange = async function () {
         if (xhr.readyState === 4 && xhr.status === 200) {
             var objResponse = JSON.parse(xhr.responseText);
-            let age = 1800000; // 30 minutos
+            let age = Date.now() / 1000 + 18000; // 30 minutos
             if (checkBox.checked === true) {
-                age = 86400000; // 24 horas
+                age = Date.now() / 1000 + 604800; // 7dias
             }
             const expires = new Date(Date.now() + age).toUTCString();
             document.cookie = 
